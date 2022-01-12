@@ -6,6 +6,9 @@ class InputText extends StatelessWidget {
     this.placeholder,
     this.controller,
     this.readOnly,
+    this.maxLines,
+    this.padding,
+    required this.onChange,
     Key? key,
   }) : super(key: key);
 
@@ -13,6 +16,9 @@ class InputText extends StatelessWidget {
   final String? placeholder;
   final TextEditingController? controller;
   final bool? readOnly;
+  final int? maxLines;
+  final EdgeInsetsGeometry? padding;
+  final Function onChange;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -20,15 +26,19 @@ class InputText extends StatelessWidget {
       child: TextField(
         controller: controller,
         readOnly: readOnly ?? false,
+        onChanged: onChange(),
+        maxLines: maxLines,
+        keyboardType: TextInputType.multiline,
         decoration: InputDecoration(
           filled: true,
           fillColor: Colors.white,
           labelText: label,
           hintText: placeholder,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 8,
-            vertical: 0,
-          ),
+          contentPadding: padding ??
+              const EdgeInsets.symmetric(
+                horizontal: 8,
+                vertical: 0,
+              ),
           border: const OutlineInputBorder(
             gapPadding: 1,
             borderSide: BorderSide(

@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:latis_tutor/pages/presensi_input.dart';
 import '../global/input.dart';
 
 class OTForm extends StatelessWidget {
   const OTForm({
     required this.onTap,
     required this.icon,
+    required this.data,
+    this.ot,
     this.color,
+    this.tgl,
     Key? key,
   }) : super(key: key);
 
   final VoidCallback onTap;
   final IconData icon;
   final Color? color;
+  final List data;
+  final String? tgl;
+  final String? ot;
 
   @override
   Widget build(BuildContext context) {
@@ -20,14 +27,16 @@ class OTForm extends StatelessWidget {
         Expanded(
           flex: 40,
           child: SelectOption(
-            onChanged: (v) {},
-            value: null,
+            onChanged: (v) {
+              spresensi.updateTglOtSeleted(v);
+            },
+            value: tgl,
             label: 'Tanggal',
             items: [
-              for (var i = 0; i < 5; i++)
+              for (var i = 0; i < data.length; i++)
                 DropdownMenuItem(
-                  value: i,
-                  child: Text('2021-11-$i'),
+                  value: data[i].toString(),
+                  child: Text(data[i]),
                 ),
             ],
           ),
@@ -39,10 +48,13 @@ class OTForm extends StatelessWidget {
             value: null,
             label: 'Menit',
             items: [
-              for (var i = 0; i < 5; i++)
+              for (var i = 0; i < spresensi.oTlatis.length; i++)
                 DropdownMenuItem(
-                  value: i,
-                  child: Text('Menit $i'),
+                  value: spresensi.oTlatis[i]['ot'],
+                  child: Text(
+                    spresensi.oTlatis[i]['text'],
+                    style: const TextStyle(fontSize: 12),
+                  ),
                 ),
             ],
           ),

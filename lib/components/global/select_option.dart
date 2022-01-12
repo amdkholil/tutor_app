@@ -9,7 +9,7 @@ class SelectOption extends StatelessWidget {
     this.value,
     Key? key,
   }) : super(key: key);
-  final List<DropdownMenuItem<int>> items;
+  final List<DropdownMenuItem<String>> items;
   final String label;
   final String? hint;
   final Function onChanged;

@@ -21,7 +21,7 @@ class SwiperHome extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
             ),
             child: Image.network(
-              "https://picsum.photos/id/1$i$i/300/400",
+              "https://via.placeholder.com/300x400?text=slide+$i",
               fit: BoxFit.fill,
             ),
           );

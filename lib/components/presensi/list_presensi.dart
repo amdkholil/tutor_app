@@ -34,7 +34,7 @@ class ListPresensi extends StatelessWidget {
                 left: Radius.circular(15),
               ),
               child: Image.network(
-                'https://picsum.photos/id/${index + 1}$index/100/100',
+                'https://via.placeholder.com/150',
                 fit: BoxFit.cover,
               ),
             ),
