@@ -10,7 +10,7 @@ class SPresensi = _SPresensi with _$SPresensi;
 
 abstract class _SPresensi with Store {
   @observable
-  String name = "";
+  String fullName = "";
 
   @observable
   String username = "";
@@ -32,6 +32,13 @@ abstract class _SPresensi with Store {
 
   @observable
   List tglMengajarArrStr = [];
+
+  @action
+  void setUsername(String name){
+    fullName = name;
+    var q = RegExp(r'\(([^)]*)\)').allMatches(name).map((m) => m.group(0)).join(' ');
+    username =  q.replaceAll('(','').replaceAll(')', "");
+  }
 
   @action
   void updateTglMengajar(var newTglMengajar) {
@@ -126,10 +133,12 @@ abstract class _SPresensi with Store {
 
   @action
   double totalOT() {
+
     double total = 0;
-    oTform.forEach((el) {
-      total += el['sesi'];
-    });
+    for (var el in oTform) {
+      total += double.parse(el['sesi']);
+    }
+    total = tglMengajarArrStr.length*2+total;
     return total;
   }
 

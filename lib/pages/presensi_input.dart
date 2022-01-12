@@ -1,6 +1,6 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:latis_tutor/components/presensi/presensi_comp.dart';
 import 'package:latis_tutor/pages/presensi.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import '../components/global/input.dart';
@@ -37,6 +37,7 @@ class _PresensiInputState extends State<PresensiInput> {
                   selectionMode: DateRangePickerSelectionMode.multiple,
                   onSubmit: (v) {
                     spresensi.updateTglMengajar(v);
+                    spresensi.resetOtForm();
                     Navigator.pop(context);
                   },
                   onCancel: () => Navigator.pop(context),
@@ -77,17 +78,29 @@ class _PresensiInputState extends State<PresensiInput> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SelectOption(
-                  onChanged: (v) {},
-                  value: null,
-                  label: 'Siswa',
-                  items: [
-                    for (var i = 0; i < 5; i++)
-                      DropdownMenuItem(
-                        value: i.toString(),
-                        child: Text('Siswa $i'),
-                      ),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: DropdownSearch(
+                    showSearchBox: true,
+                    mode: Mode.BOTTOM_SHEET,
+                    // ignore: deprecated_member_use
+                    hint: "Pilih siswa",
+                    // ignore: deprecated_member_use
+                    label: "Pilih siswa",
+                    items: const [
+                      "Ahmad Kholil (amdkholil)",
+                      "Italia (itali)",
+                      "Tunisia (tunis)",
+                      'Canada (can)',
+                      'Canada (can)',
+                      'Canada (can)',
+                      'Canada (can)'
+                    ],
+                    onChanged: (v) {
+                      spresensi.setUsername(v.toString());
+                    },
+                    // selectedItem: "Brazil",
+                  ),
                 ),
                 const Padding(
                   padding: EdgeInsets.fromLTRB(12, 10, 12, 0),
@@ -351,34 +364,78 @@ class PresesnsiInputPreview extends StatelessWidget {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "Total sesi : " + spresensi.totalOT().toString() + " sesi",
-                    style: const TextStyle(
-                      fontSize: 18,
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Text(
+                      "Total sesi : " +
+                          spresensi.totalOT().toString() +
+                          " sesi",
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   IPPtext(
-                    label: "Nama :",
-                    value: spresensi.name,
+                    label: "Nama : ",
+                    value: spresensi.fullName,
                   ),
                   IPPtext(
-                    label: "Kelas :",
+                    label: "Kelas : ",
                     value: spresensi.kelas,
                   ),
                   IPPtext(
-                    label: "Kurikulum :",
+                    label: "Kurikulum : ",
                     value: spresensi.kurikulum,
                   ),
                   IPPtext(
-                    label: "Jumlah Siswa :",
+                    label: "Jumlah Siswa : ",
                     value: spresensi.jumlahSiswa,
                   ),
                   IPPtext(
-                    label: "Tgl. Mengajar :",
+                    label: "Tgl. Mengajar : ",
                     value: spresensi.tglMengajar,
                   ),
+                  const Text(
+                    "Kekurangan/kelebihan sesi: ",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  if (spresensi.oTform.isEmpty) const Text("-"),
+                  if (spresensi.oTform.isNotEmpty)
+                  for (var ot in spresensi.oTform)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 4),
+                      child: Text(
+                        "${ot['tgl']} => ${ot['sesi']} sesi",
+                        style: const TextStyle(fontSize: 18),
+                      ),
+                    ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    "Canceling: ",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  if (spresensi.canceling.isEmpty) const Text("-"),
+                  if (spresensi.canceling.isNotEmpty)
+                    for (var ot in spresensi.canceling)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 6),
+                        child: Text(
+                          "▸ ${ot['tanggal']}, ${ot['alasan']}.",
+                          style: const TextStyle(fontSize: 18),
+                        ),
+                      ),
+                  const SizedBox(height: 8),
                   IPPtext(
-                    label: "Keterangan :",
+                    label: "Keterangan : ",
                     value: spresensi.keterangan,
                   ),
                 ],
@@ -390,13 +447,13 @@ class PresesnsiInputPreview extends StatelessWidget {
 }
 
 class IPPtext extends StatelessWidget {
-  IPPtext({
+  const IPPtext({
     required this.label,
     required this.value,
     Key? key,
   }) : super(key: key);
-  String label;
-  String value;
+  final String label;
+  final String value;
 
   @override
   Widget build(BuildContext context) {
