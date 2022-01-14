@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:latis_tutor/models/siswa.dart';
 import 'package:latis_tutor/pages/presensi.dart';
+import 'package:latis_tutor/services/siswa_req.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import '../components/global/input.dart';
 import '../store/spresensi.dart';
@@ -50,6 +54,9 @@ class _PresensiInputState extends State<PresensiInput> {
     );
   }
 
+  SiswaReq siswaReq = SiswaReq();
+  List<Siswa> siswas = [];
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -58,7 +65,12 @@ class _PresensiInputState extends State<PresensiInput> {
         shadowColor: Colors.black12,
         backgroundColor: Colors.white,
         leading: IconButton(
-          onPressed: () => Navigator.pop(context, const Presesnsi()),
+          onPressed: () => Navigator.pop(
+            context,
+            Builder(
+              builder: (_) => const Presesnsi(),
+            ),
+          ),
           icon: const Icon(
             Icons.chevron_left,
             color: Colors.black87,
@@ -79,6 +91,26 @@ class _PresensiInputState extends State<PresensiInput> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 16, 0, 4),
+                  child: SelectOption(
+                    label: "Lembaga",
+                    onChanged: (v) async {
+                      var res = await siswaReq.getSiswaByLembaga(v);
+                      for (var siswa in res) {
+                        siswas.add(Siswa.fromJson(siswa));
+                      }
+                      spresensi.setAllSiswa(siswas);
+                    },
+                    items: [
+                      for (var lemb in spresensi.lembaga)
+                        DropdownMenuItem(
+                          value: lemb,
+                          child: Text(lemb),
+                        ),
+                    ],
+                  ),
+                ),
+                Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: DropdownSearch(
                     showSearchBox: true,
@@ -87,15 +119,7 @@ class _PresensiInputState extends State<PresensiInput> {
                     hint: "Pilih siswa",
                     // ignore: deprecated_member_use
                     label: "Pilih siswa",
-                    items: const [
-                      "Ahmad Kholil (amdkholil)",
-                      "Italia (itali)",
-                      "Tunisia (tunis)",
-                      'Canada (can)',
-                      'Canada (can)',
-                      'Canada (can)',
-                      'Canada (can)'
-                    ],
+                    items: spresensi.allSiswa,
                     onChanged: (v) {
                       spresensi.setUsername(v.toString());
                     },
@@ -406,14 +430,14 @@ class PresesnsiInputPreview extends StatelessWidget {
                   const SizedBox(height: 4),
                   if (spresensi.oTform.isEmpty) const Text("-"),
                   if (spresensi.oTform.isNotEmpty)
-                  for (var ot in spresensi.oTform)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 4),
-                      child: Text(
-                        "${ot['tgl']} => ${ot['sesi']} sesi",
-                        style: const TextStyle(fontSize: 18),
+                    for (var ot in spresensi.oTform)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 4),
+                        child: Text(
+                          "${ot['tgl']} => ${ot['sesi']} sesi",
+                          style: const TextStyle(fontSize: 18),
+                        ),
                       ),
-                    ),
                   const SizedBox(height: 8),
                   const Text(
                     "Canceling: ",
