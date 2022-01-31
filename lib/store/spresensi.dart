@@ -2,7 +2,6 @@
 // import 'dart:ffi';
 import 'package:flutter/cupertino.dart';
 import 'package:latis_tutor/components/presensi/otform.dart';
-import 'package:latis_tutor/models/Siswa.dart';
 import 'package:mobx/mobx.dart';
 
 part 'spresensi.g.dart';
