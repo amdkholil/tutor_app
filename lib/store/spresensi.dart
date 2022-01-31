@@ -2,6 +2,7 @@
 // import 'dart:ffi';
 import 'package:flutter/cupertino.dart';
 import 'package:latis_tutor/components/presensi/otform.dart';
+import 'package:latis_tutor/models/Siswa.dart';
 import 'package:mobx/mobx.dart';
 
 part 'spresensi.g.dart';
@@ -9,8 +10,16 @@ part 'spresensi.g.dart';
 class SPresensi = _SPresensi with _$SPresensi;
 
 abstract class _SPresensi with Store {
+  List lembaga = ['Latiseducation', 'Tutorindonesia'];
+
   @observable
-  String name = "";
+  List<String> allSiswa = [];
+
+  @observable
+  List masterSiswa = [];
+
+  @observable
+  String fullName = "";
 
   @observable
   String username = "";
@@ -32,6 +41,29 @@ abstract class _SPresensi with Store {
 
   @observable
   List tglMengajarArrStr = [];
+
+  @action
+  setAllSiswa(List dataSiswa) {
+    allSiswa = [];
+    masterSiswa = [];
+    for (var siswa in dataSiswa) {
+      allSiswa.add("${siswa.namaLengkap} (${siswa.username})");
+    }
+  }
+
+  @action
+  void setUsername(String name) {
+    fullName = name;
+    var q = RegExp(r'\(([^)]*)\)')
+        .allMatches(name)
+        .map((m) => m.group(0))
+        .join(' ');
+    username = q.replaceAll('(', '').replaceAll(')', "");
+    // masterSiswa.where((element) => )
+  }
+
+  @action
+  setKelasDll(String username) {}
 
   @action
   void updateTglMengajar(var newTglMengajar) {
@@ -127,9 +159,10 @@ abstract class _SPresensi with Store {
   @action
   double totalOT() {
     double total = 0;
-    oTform.forEach((el) {
-      total += el['sesi'];
-    });
+    for (var el in oTform) {
+      total += double.parse(el['sesi']);
+    }
+    total = tglMengajarArrStr.length * 2 + total;
     return total;
   }
 

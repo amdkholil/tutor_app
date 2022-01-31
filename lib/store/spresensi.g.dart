@@ -9,18 +9,18 @@ part of 'spresensi.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$SPresensi on _SPresensi, Store {
-  final _$nameAtom = Atom(name: '_SPresensi.name');
+  final _$fullNameAtom = Atom(name: '_SPresensi.fullName');
 
   @override
-  String get name {
-    _$nameAtom.reportRead();
-    return super.name;
+  String get fullName {
+    _$fullNameAtom.reportRead();
+    return super.fullName;
   }
 
   @override
-  set name(String value) {
-    _$nameAtom.reportWrite(value, super.name, () {
-      super.name = value;
+  set fullName(String value) {
+    _$fullNameAtom.reportWrite(value, super.fullName, () {
+      super.fullName = value;
     });
   }
 
@@ -297,6 +297,17 @@ mixin _$SPresensi on _SPresensi, Store {
   final _$_SPresensiActionController = ActionController(name: '_SPresensi');
 
   @override
+  void setUsername(String name) {
+    final _$actionInfo = _$_SPresensiActionController.startAction(
+        name: '_SPresensi.setUsername');
+    try {
+      return super.setUsername(name);
+    } finally {
+      _$_SPresensiActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void updateTglMengajar(dynamic newTglMengajar) {
     final _$actionInfo = _$_SPresensiActionController.startAction(
         name: '_SPresensi.updateTglMengajar');
@@ -442,7 +453,7 @@ mixin _$SPresensi on _SPresensi, Store {
   @override
   String toString() {
     return '''
-name: ${name},
+fullName: ${fullName},
 username: ${username},
 kelas: ${kelas},
 jumlahSiswa: ${jumlahSiswa},
