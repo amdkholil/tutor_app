@@ -96,6 +96,7 @@ class _PresensiInputState extends State<PresensiInput> {
                     label: "Lembaga",
                     onChanged: (v) async {
                       var res = await siswaReq.getSiswaByLembaga(v);
+                      print(res);
                       for (var siswa in res) {
                         siswas.add(Siswa.fromJson(siswa));
                       }
