@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:latis_tutor/pages/home.dart';
+import 'package:latis_tutor/pages/login.dart';
+import 'package:latis_tutor/store/shome.dart';
+
+
+SHome $home = SHome();
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -12,7 +15,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const Home(),
+      initialRoute: $home.isLogin?"/":"/login",
+      routes: {
+        "/": (context)=>const Home(),
+        "/login":(context)=>const Login(),
+      },
+
+      // home: const Home(),
     );
   }
 }

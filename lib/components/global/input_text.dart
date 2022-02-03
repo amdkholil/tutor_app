@@ -8,6 +8,7 @@ class InputText extends StatelessWidget {
     this.readOnly,
     this.maxLines,
     this.padding,
+    this.obsecureText,
     required this.onChange,
     Key? key,
   }) : super(key: key);
@@ -19,6 +20,7 @@ class InputText extends StatelessWidget {
   final int? maxLines;
   final EdgeInsetsGeometry? padding;
   final Function onChange;
+  final bool? obsecureText;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -27,7 +29,8 @@ class InputText extends StatelessWidget {
         controller: controller,
         readOnly: readOnly ?? false,
         onChanged: onChange(),
-        maxLines: maxLines,
+        maxLines: maxLines??1,
+        obscureText: obsecureText??false,
         keyboardType: TextInputType.multiline,
         decoration: InputDecoration(
           filled: true,
